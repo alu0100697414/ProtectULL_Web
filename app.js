@@ -15,7 +15,7 @@ var passport = require('passport');
 var app = express();
 
 //Configure: bodyParser to parse JSON data
-//           methodOverride to implement custom HTTP methods  
+//           methodOverride to implement custom HTTP methods
 //           router to crete custom routes
 
 app.enable('view cache');
@@ -72,5 +72,3 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (user, done) {
     done(null, user);
 });
-
-

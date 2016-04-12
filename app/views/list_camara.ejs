@@ -14,9 +14,10 @@
                 <thead>
                 <tr>
                     <th data-field="live"></th>
-                    <th data-field="mac">MAC</th>
-                    <th data-field="server">Server</th>
-                    <th data-field="delete"></th>
+                    <th data-field="mac">Dirección MAC</th>
+                    <th data-field="server">Enlace del vídeo</th>
+                    <th data-field="date">Última conexión</th>
+                    <th data-field="delete">Eliminar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -26,10 +27,11 @@
                     </td>
                     <td>{{camara.name}}</td>
                     <td>{{camara.server}}</td>
+                    <td>{{camara.time_offline}}</td>
                     <td>
                         <a ng-click="delete(camara._id)" class="btn btn-floating waves-effect waves-light red hoverable">
-                            <i  class="material-icons">delete</i>
-                            </a>
+                          <i  class="material-icons">delete</i>
+                        </a>
 
                     </td>
                 </tr>

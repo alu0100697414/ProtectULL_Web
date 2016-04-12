@@ -19,14 +19,16 @@
                 <thead>
                 <tr>
                     <th data-field="MAC">MAC</th>
-                    <th data-field="Servidor">Server</th>
+                    <th data-field="nombre">Nombre</th>
+                    <th data-field="numero">Número de teléfono</th>
                     <th data-field="Fecha">Fecha</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="historial in historiales">
                     <td>{{historial.name}}</td>
-                    <td>{{historial.server}}</td>
+                    <td>{{historial.nombre}}</td>
+                    <td>{{historial.numero}}</td>
                     <td>{{historial.time}}</td>
                 </tr>
                 </tbody>

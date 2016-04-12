@@ -4,7 +4,7 @@
 var mongoose = require('mongoose'),
     _ = require('underscore');
 var Camara = require('../../app/models/camara');
-var Historial = require('../../app/models/historial_conexiones');
+var Historial = require('../../app/models/historial');
 var Utilities = require('./utilities');
 
 var error = {'response' : 404};
@@ -121,7 +121,7 @@ exports.putonline = function (request, response) {
 
     if (Utilities.isEmpty(request.params.name)) return response.send(error_400);
 
-    if ( Utilities.isEmpty(request.body.name)) return response.send(error_400);
+    if (Utilities.isEmpty(request.body.name)) return response.send(error_400);
     if (Utilities.isEmpty(request.body.server)) return response.send(error_400);
     if (Utilities.isEmpty(request.body.time_now)) return response.send(error_400_);
 
@@ -131,13 +131,16 @@ exports.putonline = function (request, response) {
         if (Utilities.isEmpty(camara)) return response.send(error_400);
 
         camara[0].online = true;
+        camara[0].time_online = request.body.time_now;
+        camara[0].number = request.body.numero;
+        camara[0].nombre = request.body.nombre;
         camara[0].save();
 
         Historial.find({name: request.body.name}).exec(function (err, historiales) {
             if (err) return response.send(error);
 
             var server = "rtmp://" + request.body.server + request.body.name;
-            var historial_nuevo = new Historial({ server: server, name: request.body.name, time: request.body.time_now });
+            var historial_nuevo = new Historial({ name: request.body.name, nombre: request.body.nombre, numero: request.body.numero, time: request.body.time_now });
             historial_nuevo.save();
 
             response.send(ok);
@@ -148,10 +151,13 @@ exports.putonline = function (request, response) {
 /* off Live  */
 exports.putoffline = function (request, response) {
     if (Utilities.isEmpty(request.params.name)) return response.send(error_400);
+    if (Utilities.isEmpty(request.body.date_last_online)) return response.send(error_400);
+
     Camara.find({name: request.params.name}).exec(function (err, camara) {
         if (err) response.send(error_400);
         if (Utilities.isEmpty(camara)) return response.send(error_400);
         camara[0].online = false;
+        camara[0].time_offline = request.body.date_last_online;
         camara[0].save();
         response.send(ok);
     });

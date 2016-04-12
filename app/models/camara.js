@@ -5,6 +5,10 @@ var mongoose = require('mongoose'),
 var camaraSchema = new Schema({
     server: String,
     name:  String,
+    time_online: String,
+    time_offline: String,
+    number: String,
+    nombre: String,
     online: { type: Boolean, default: false }
 });
 
