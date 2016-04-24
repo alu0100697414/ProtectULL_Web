@@ -48,7 +48,7 @@ exports.getall = function (request, response) {
 
 /* Get historial */
 exports.getHistorial = function (request, response) {
-    Historial.find(function (err, historiales) {
+    Historial.find({}, null, {sort: {time: -1}},function (err, historiales) {
         if (!err) {
             response.send(historiales);
         } else {
