@@ -7,18 +7,37 @@ var Camara = require('../../app/models/camara');
 var Historial = require('../../app/models/historial');
 var Utilities = require('./utilities');
 var crypto = require('crypto');
+var ecdh = require('ecdh');
 
 var error = {'response' : 404};
 var error_400 = {'response' : 400};
 var error_400_1 = {'responseEO' : 400};
 var ok = {'response' : 201};
 
+var fs = require('fs');
+
 var Encrypt;
 
 Encrypt = (function() {
+
+  // Pick some curve
+  var curve = ecdh.getCurve('secp128r1'),
+  // Generate random keys for Alice and Bob
+  aliceKeys = ecdh.generateKeys(curve),
+  bobKeys = ecdh.generateKeys(curve);
+
+  var pub_android = new Buffer("78f74dbf362fc39c3ef9f6248649c5163dda938d04d08f614cd4863782efeb97", 'hex');
+  var pri_android = new Buffer("8c7e4045dc0097744f0a747c554e7804", 'hex');
+
+  var publica = ecdh.PublicKey.fromBuffer(curve, pub_android);
+  var privada = ecdh.PrivateKey.fromBuffer(curve, pri_android);
+
+  var comp = privada.deriveSharedSecret(publica);
+
   var cipher_desencriptar, cipher_encriptar, decrypt, encrypt, iv, key;
-  key = crypto.createHash("sha256").update("somepassword").digest();
+  key = crypto.createHash("sha256").update(comp.toString('hex')).digest();
   iv = '4e5Wa71fYoT7MFEX';
+
   cipher_desencriptar = function(mode, data) {
     var encipher, encoded;
     encipher = crypto[mode]("aes-256-cbc", key, iv);
@@ -85,12 +104,6 @@ exports.getHistorial = function (request, response) {
     Historial.find({}, null, {sort: {time: -1}},function (err, historiales) {
         if (!err) {
             response.send(historiales);
-
-            // var src = 'me';
-            // var enc = Encrypt.encrypt(src);
-            // console.log('encrypted: ', enc);
-            // var dec = Encrypt.decrypt(enc);
-            // console.log('decrypted: ', dec);
         } else {
             console.log(err);
             response.send(error);

@@ -14,12 +14,7 @@ var passport = require('passport');
 
 var app = express();
 
-//Configure: bodyParser to parse JSON data
-//           methodOverride to implement custom HTTP methods
-//           router to crete custom routes
-
 app.enable('view cache');
-
 
 // all environments
 app.set('port', process.env.PORT || 3000);
