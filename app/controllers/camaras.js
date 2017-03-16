@@ -26,8 +26,8 @@ Encrypt = (function() {
   aliceKeys = ecdh.generateKeys(curve),
   bobKeys = ecdh.generateKeys(curve);
 
-  var pub_android = new Buffer("78f74dbf362fc39c3ef9f6248649c5163dda938d04d08f614cd4863782efeb97", 'hex');
-  var pri_android = new Buffer("8c7e4045dc0097744f0a747c554e7804", 'hex');
+  var pub_android = new Buffer("18f22134b490ee036f54238ee464e24e77f95033a603b7f013c03e701612e5ed", 'hex');
+  var pri_android = new Buffer("e4c1d53b4e905f0b663a29ee59cf86a8", 'hex');
 
   var publica = ecdh.PublicKey.fromBuffer(curve, pub_android);
   var privada = ecdh.PrivateKey.fromBuffer(curve, pri_android);
@@ -186,12 +186,16 @@ exports.putonline = function (request, response) {
 
     if (Utilities.isEmpty(request.body.name)) return response.send(error_400);
     if (Utilities.isEmpty(request.body.server)) return response.send(error_400);
-    if (Utilities.isEmpty(request.body.time_now)) return response.send(error_400_);
+    if (Utilities.isEmpty(request.body.time_now)) return response.send(error_400);
+    if (Utilities.isEmpty(request.body.latitude)) return response.send(error_400);
+    if (Utilities.isEmpty(request.body.longitude)) return response.send(error_400);
 
     var DTime_now = Encrypt.decrypt(request.body.time_now);
     var DNombre = Encrypt.decrypt(request.body.nombre);
     var DNumero = Encrypt.decrypt(request.body.numero);
     var DServer = Encrypt.decrypt(request.body.server);
+    var DLatitude = Encrypt.decrypt(request.body.latitude);
+    var DLongitude = Encrypt.decrypt(request.body.longitude);
 
     Camara.find({name: request.params.name}).exec(function (err, camara) {
 
@@ -202,13 +206,15 @@ exports.putonline = function (request, response) {
         camara[0].time_online = DTime_now;
         camara[0].number = DNumero;
         camara[0].nombre = DNombre;
+        camara[0].latitude = DLatitude;
+        camara[0].longitude = DLongitude;
         camara[0].save();
 
         Historial.find({name: request.params.name}).exec(function (err, historiales) {
             if (err) return response.send(error);
 
             var server = "rtmp://" + DServer + request.params.name;
-            var historial_nuevo = new Historial({ name: request.params.name, nombre: DNombre, numero: DNumero, time: DTime_now });
+            var historial_nuevo = new Historial({ name: request.params.name, nombre: DNombre, numero: DNumero, time: DTime_now, latitude: DLatitude, longitude: DLongitude });
             historial_nuevo.save();
 
             response.send(ok);

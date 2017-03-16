@@ -6,7 +6,9 @@ var historialDataSchema = new Schema({
     name:  String,
     nombre: String,
     numero: String,
-    time: String
+    time: String,
+    latitude: String,
+    longitude: String
 });
 
 

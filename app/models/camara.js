@@ -9,6 +9,8 @@ var camaraSchema = new Schema({
     time_offline: String,
     number: String,
     nombre: String,
+    latitude: String,
+    longitude: String,
     online: { type: Boolean, default: false }
 });
 
